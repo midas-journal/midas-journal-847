@@ -1,0 +1,32 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+PROJECT(HystThr)
+INCLUDE(${CMAKE_SOURCE_DIR}/IJMacros.txt)
+
+ENABLE_TESTING()
+INCLUDE(Dart)
+
+SET(Required_Packages
+  ITK
+)
+
+FOREACH(Package ${Required_Packages})
+   LOADPACKAGE(${Package})
+ENDFOREACH(Package)
+
+SET(Libraries
+  ITKBasicFilters
+  ITKCommon
+  ITKIO
+)
+
+#IF(BUILD_TESTING)
+  SET(CurrentExe "HystThr")
+  ADD_EXECUTABLE(${CurrentExe} main.cxx) 
+  TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+	SET(CurrentExe "ImageCompare")
+	ADD_EXECUTABLE(${CurrentExe} ImageCompare.cxx) 
+	TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+#ENDIF(BUILD_TESTING)
+
+ADD_TEST(HystThr2DTest HystThr ${CMAKE_SOURCE_DIR}/lena.png 160 180 ${CMAKE_SOURCE_DIR}/lena_out.png)
+ADD_TEST(HystThr2DTestComp ImageCompare ${CMAKE_SOURCE_DIR}/lena_out.png ${CMAKE_SOURCE_DIR}/lena_ref.png)
